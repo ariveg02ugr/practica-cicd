@@ -1,0 +1,43 @@
+name: CI/CD 
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Instalar dependencias
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Análisis de código (Q4)
+      run: |
+        pylint app.py --disable=C0114,C0116 || true
+    
+    - name: Ejecutar tests (Q1 y Q2)
+      run: |
+        pytest -v test_app.py
+    
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy a producción
+      run: |
+        echo "Desplegando a producción..."
+        echo "Timestamp: $(date)"
+        echo "Commit: ${{ github.sha }}"
