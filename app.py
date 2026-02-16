@@ -30,5 +30,20 @@ def multiply():
     result = a * b
     return jsonify({"result": result})
 
+@app.route('/divide', methods=['POST'])
+def divide():
+    data = request.get_json()
+    a = data.get('a', 0)
+    b = data.get('b', 1)
+    
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        return jsonify({"error": "Los valores deben ser números"}), 400
+    
+    if b == 0:
+        return jsonify({"error": "No se puede dividir por cero"}), 400
+    
+    result = a / b
+    return jsonify({"result": result})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
