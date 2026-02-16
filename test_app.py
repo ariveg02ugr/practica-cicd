@@ -51,3 +51,12 @@ def test_flujo_completo(client):
     mult = client.post('/multiply', json={'a': 3, 'b': 4})
     assert mult.json['result'] == 12
 
+def test_division_basica(client):
+    response = client.post('/divide', json={'a': 10, 'b': 2})
+    assert response.status_code == 200
+    assert response.json['result'] == 5
+
+def test_division_por_cero(client):
+    response = client.post('/divide', json={'a': 10, 'b': 0})
+    assert response.status_code == 400
+
